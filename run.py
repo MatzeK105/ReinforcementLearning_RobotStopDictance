@@ -1,21 +1,31 @@
 from environment import Environment
+from rl_brain import Sarsa
 import time
 
 def update():
-    done = False
-    action = 0
-    counter = 0
-    time.sleep(2)
+    for episode in range(200):
+        done = False
 
-    while True:
-        newState, reward, done = env.performAction(action)
+        # init
+        observation = env.reset()
         env.render()
 
-        if done:
-            counter += 1
-            env.reset()
-            if counter == 3:
-                break
+        # rl choose action
+        action = rl.choose_action(str(observation))
+
+        while not done:
+            observation_, reward, done = env.perform_action(action)
+            env.render()
+
+            action_ = rl.choose_action(str(observation_))
+
+            rl.learn(str(observation), action, reward, str(observation_), action_, done)
+
+            observation = observation_
+            action = action_
+            
+            if done:
+                print(rl.q_table)
 
     time.sleep(2)
     print('end')
@@ -23,6 +33,8 @@ def update():
 
 if __name__ == "__main__":
     env = Environment()
+    rl = Sarsa(actions=list(range(env.num_actions)))
 
+    time.sleep(1)
     env.after(100, update)
     env.mainloop()
