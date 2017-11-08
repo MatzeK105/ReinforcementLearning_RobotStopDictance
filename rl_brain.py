@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 class RL(object):
+
     def __init__(self, action_space, learning_rate=0.01, gamma=0.99, epsilon=0.99):
         self.actions = action_space
         self.lr = learning_rate
@@ -26,7 +27,8 @@ class RL(object):
         if np.random.rand() < self.epsilon:
             # choose best action
             state_action = self.q_table.ix[state, :]
-            state_action = state_action.reindex(np.random.permutation(state_action.index))     # some actions have same value
+            # if all actions have same value, idxmax picks the first action, that's why shuffle the list
+            state_action = state_action.reindex(np.random.permutation(state_action.index))
             action = state_action.idxmax()
         else:
             # choose random action
@@ -44,8 +46,8 @@ class Sarsa(RL):
         q_predict = self.q_table.ix[s, a]
 
         if not finished:
-            q_target = r + self.gamma * self.q_table.ix[s_, a_]  # next state is not terminal
+            q_target = r + self.gamma * self.q_table.ix[s_, a_]
         else:
-            q_target = r  # next state is terminal
+            q_target = r
 
         self.q_table.ix[s, a] += self.lr * (q_target - q_predict)  # update

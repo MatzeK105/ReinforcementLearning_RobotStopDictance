@@ -17,15 +17,13 @@ def update():
             observation_, reward, done = env.perform_action(action)
             env.render()
 
+            # choose action for next observation
             action_ = rl.choose_action(str(observation_))
 
             rl.learn(str(observation), action, reward, str(observation_), action_, done)
 
             observation = observation_
             action = action_
-            
-            if done:
-                print(rl.q_table)
 
     time.sleep(2)
     print('end')

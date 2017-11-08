@@ -44,13 +44,16 @@ class Environment(tk.Tk, object):
         self.canvas.pack()
 
     def stop_robot(self):
+        # change outline to show the robot slows down
         self.canvas.itemconfig(self.robot, outline='red')
         
+        # slow down robot
         for i in range(50):
             self.canvas.move(self.robot, -1, 0)
             time.sleep(SLEEP_TIME * 10 * i)
             self.render()
 
+        # change outline back again
         self.canvas.itemconfig(self.robot, outline='')
         self.render()
         time.sleep(0.2)
@@ -76,13 +79,13 @@ class Environment(tk.Tk, object):
             if (dist >= 15 and dist <= 40):     # if enough space to obstacle
                 reward = 1
                 done = True
-            elif dist < 15:
+            elif dist < 15:     # if too close to obstacle
                 reward = -1
                 done = True
-            else:
+            else:               # if too far away to obstacle
                 reward = -1
                 done = False
-        elif nextState[0] <= obstCoords[2]:   # if robot hits obstacle
+        elif nextState[0] <= obstCoords[2]:     # if robot hits obstacle
             reward = -1
             done = True
 
