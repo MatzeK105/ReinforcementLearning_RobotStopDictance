@@ -3,7 +3,7 @@ from rl_brain import Sarsa
 import time
 
 def update():
-    for episode in range(200):
+    for episode in range(300):
         done = False
 
         # init

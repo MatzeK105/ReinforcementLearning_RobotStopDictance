@@ -4,10 +4,10 @@ import time
 
 HEIGHT = 100
 WIDTH = 800
-ROBOT_START_X = 200
+ROBOT_START_X = 700
 ROBOT_START_Y = 50
-SLEEP_TIME = 0.0005
-SLEEP_TIME_RESET = 0.5
+SLEEP_TIME = 0.00001
+SLEEP_TIME_RESET = 0.2
 
 class Environment(tk.Tk, object):
     def __init__(self):
@@ -43,6 +43,18 @@ class Environment(tk.Tk, object):
         # pack
         self.canvas.pack()
 
+    def stop_robot(self):
+        self.canvas.itemconfig(self.robot, outline='red')
+        
+        for i in range(50):
+            self.canvas.move(self.robot, -1, 0)
+            time.sleep(SLEEP_TIME * 10 * i)
+            self.render()
+
+        self.canvas.itemconfig(self.robot, outline='')
+        self.render()
+        time.sleep(0.2)
+
     def perform_action(self, action):
         stopped = False
         done = False
@@ -51,7 +63,9 @@ class Environment(tk.Tk, object):
         if action == 0:     # drive
             self.canvas.move(self.robot, -1, 0)
         elif action == 1:   # break
-            self.canvas.move(self.robot, -50, 0)    # move further because of stop distance
+            # if you want to speed up the process comment the next line in and the function stop_robot out
+            #self.canvas.move(self.robot, -50, 0)    # move further because of stop distance
+            self.stop_robot()
             stopped = True
 
         nextState = self.canvas.coords(self.robot)
